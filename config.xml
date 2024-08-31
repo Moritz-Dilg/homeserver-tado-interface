@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<config>
+    <modules>
+        <module category="tado-interface" context="tado-interface" id="12345" internal_name="tado-interface" external_name="Tado Interface" version="0.0.1">
+            <inputs>
+				<input type="number" const_name="trigger">Trigger</input>
+				<input type="string" const_name="email">E-Mail</input>
+				<input type="string" const_name="password">Passwort</input>
+				<input type="string" const_name="zone_1">Zone 1 (Name)</input>
+				<input type="number" const_name="target" init_value="-1">Vorgabe Sollwert Zone 1</input>
+            </inputs>
+            <outputs>
+                <output type="number" const_name="exception" init_value="0">Fehlercode</output>
+				<output type="number" const_name="actual_1">Istwert Zone 1</output>
+				<output type="number" const_name="target_1">Sollwert Zone 1</output>
+				<output type="number" const_name="humidity_1">Feuchte Zone 1</output>
+				<output type="number" const_name="battery_1">Batterie Status Zone 1</output>
+				<output type="string" const_name="debug_1">Debug 1</output>
+				<output type="string" const_name="debug_2">Debug 2</output>
+				<output type="string" const_name="debug_3">Debug 3</output>
+				<output type="string" const_name="debug_4">Debug 4</output>
+				<output type="string" const_name="debug_5">Debug 5</output>
+				<output type="string" const_name="debug_6">Debug 6</output>
+				<output type="string" const_name="debug_7">Debug 7</output>
+				<output type="string" const_name="debug_8">Debug 8</output>
+				<output type="string" const_name="debug_9">Debug 9</output>
+				<output type="string" const_name="debug_10">Debug 10</output>
+            </outputs>
+        </module>
+    </modules>
+</config>
