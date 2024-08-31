@@ -1,4 +1,10 @@
 # coding: UTF-8
+
+import urllib
+import urllib2
+import ssl
+import json
+
 ##!!!!##################################################################################################
 #### Own written code can be placed above this commentblock . Do not change or delete commentblock! ####
 ########################################################################################################
@@ -51,3 +57,47 @@ class Tado_interface12345(hsl20_4.BaseModule):
     
     def get_current_state(self):
         pass
+
+    def fetch(self, url, body = None, bodyType = None, access_token = None):
+        """
+        Fetch resources from the provided URL   
+
+        :param url: The URL to fetch the resource from (http and https)
+        :type url: string
+        :param body: The request body
+        :type body: dict or None
+        :param body_type: The type of the request body (`None` or `x-www-form-urlencoded`)
+        :type body_type: string or None
+        :param access_token: Authenticate with the OAuth2.0 authentication flow and a Bearer token
+        :type access_token: string or None
+
+        :return: The response body and status
+        :rtype: [JSON or None, number]
+        """
+
+        # Build a SSL Context to disable certificate verification.
+        ctx = ssl._create_unverified_context()
+        # Build a http request and add an authorization header or a form data body
+        request = urllib2.Request(url)
+        if access_token != None:
+            request.add_header("Authorization", "Bearer " + access_token)
+        if bodyType == "x-www-form-urlencoded":
+            data = urllib.urlencode(body)
+            data = data.encode("ascii")
+            request.add_data(data)
+
+        try:
+            # Open the URL
+            response = urllib2.urlopen(request, context=ctx)
+        except urllib2.HTTPError as e:
+            if e.code == 401:
+                self._set_output_value(self.PIN_O_EXCEPTION, 4)
+            return [None, e.code]
+        except urllib2.URLError as e:
+            self._set_output_value(self.PIN_O_EXCEPTION, 5)
+            self._set_output_value(self.PIN_O_DEBUG_6, e.reason)
+            return [None, -1]
+        else:
+            # Return the response if the request was successful
+            response_data = response.read()
+            return [json.loads(response_data), 200]
