@@ -62,10 +62,29 @@ class Tado_interface12345(hsl20_4.BaseModule):
         try:
             if self.access_token == None or self.refresh_token == None:
                 self.get_access_token()
-            if self.expires_at >= time.time():
-                pass
+            if self.expires_at <= time.time():
+                self.refresh_access_token()
         except:
             pass
+    
+    def refresh_access_token(self):
+        if self.refresh_token == None:
+            self.get_access_token()
+        
+        payload = {
+    	    "client_id": "tado-web-app",
+    	    "client_secret": "wZaRN7rpjn3FoNyF5IFuxg9uMzYJcvOoQ8QWiIqS3hfk6gLhVlG57j5YNoZL2Rtc",
+	        "grant_type": "refresh_token"
+        }
+        payload["refresh_token"] = self.refresh_token
+
+        [auth, status_auth] = self.fetch("https://auth.tado.com/oauth/token", body=payload, bodyType="x-www-form-urlencoded")
+        if status_auth != 200:
+            raise Exception("Error regenerating access token")
+        
+        self.access_token = auth["access_token"]
+        self.refresh_token = auth["refresh_token"]
+        self.expires_at = time.time() + auth["expires_in"]
     
     def get_access_token(self):
         username = self._get_input_value(self.PIN_I_EMAIL)
