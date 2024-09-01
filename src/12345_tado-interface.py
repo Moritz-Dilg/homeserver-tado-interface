@@ -4,6 +4,7 @@ import urllib
 import urllib2
 import ssl
 import json
+import time
 
 ##!!!!##################################################################################################
 #### Own written code can be placed above this commentblock . Do not change or delete commentblock! ####
@@ -42,7 +43,9 @@ class Tado_interface12345(hsl20_4.BaseModule):
 ###################################################################################################!!!##
 
     def on_init(self):
-        pass
+        self.access_token = None
+        self.refresh_token = None
+        self.expires_at = None
 
     def on_input_value(self, index, value):
         if index == self.PIN_I_TRIGGER:
@@ -56,7 +59,37 @@ class Tado_interface12345(hsl20_4.BaseModule):
         pass
     
     def get_current_state(self):
-        pass
+        try:
+            if self.access_token == None or self.refresh_token == None:
+                self.get_access_token()
+            if self.expires_at >= time.time():
+                pass
+        except:
+            pass
+    
+    def get_access_token(self):
+        username = self._get_input_value(self.PIN_I_EMAIL)
+        password = self._get_input_value(self.PIN_I_PASSWORD)
+
+        if username == "" or password == "":
+            self._set_output_value(self.PIN_O_EXCEPTION, 1)
+            raise Exception("No username or password provided")
+        
+        payload = {
+    	    "client_id": "tado-web-app",
+    	    "client_secret": "wZaRN7rpjn3FoNyF5IFuxg9uMzYJcvOoQ8QWiIqS3hfk6gLhVlG57j5YNoZL2Rtc",
+	        "grant_type": "password"
+        }
+        payload["username"] = username
+        payload["password"] = password
+
+        [auth, status_auth] = self.fetch("https://auth.tado.com/oauth/token", body=payload, bodyType="x-www-form-urlencoded")
+        if status_auth != 200:
+            raise Exception("Error authenticating user")
+        
+        self.access_token = auth["access_token"]
+        self.refresh_token = auth["refresh_token"]
+        self.expires_at = time.time() + auth["expires_in"]
 
     def fetch(self, url, body = None, bodyType = None, access_token = None):
         """
@@ -95,7 +128,6 @@ class Tado_interface12345(hsl20_4.BaseModule):
             return [None, e.code]
         except urllib2.URLError as e:
             self._set_output_value(self.PIN_O_EXCEPTION, 5)
-            self._set_output_value(self.PIN_O_DEBUG_6, e.reason)
             return [None, -1]
         else:
             # Return the response if the request was successful
