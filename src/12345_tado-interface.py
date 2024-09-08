@@ -1,4 +1,4 @@
-# coding: UTF-8
+# coding: iso-8859-15
 
 import urllib
 import urllib2
@@ -46,6 +46,8 @@ class Tado_interface12345(hsl20_4.BaseModule):
         self.access_token = None
         self.refresh_token = None
         self.expires_at = None
+        self.zone_names = {}
+        self.tado_id_to_zone_id = {}
 
     def on_input_value(self, index, value):
         if index == self.PIN_I_TRIGGER:
@@ -53,17 +55,46 @@ class Tado_interface12345(hsl20_4.BaseModule):
         elif index in [self.PIN_I_EMAIL, self.PIN_I_PASSWORD]:
             pass
         elif index == self.PIN_I_ZONE_1:
-            pass
+            self.zone_names[value] = 1
+            try:
+                self.update_zones()
+            except:
+                pass
         elif index == self.PIN_I_TARGET:
             pass
         pass
+
+    def update_zones(self):
+        self.validate_access_token()
+
+        home_id = self.get_home_id()
+        [zones, status] = self.fetch("https://my.tado.com/api/v2/homes/" + str(home_id) + "/zones?ngsw-bypass=true", access_token=self.access_token)
+        if status != 200:
+            self._set_output_value(self.PIN_O_EXCEPTION, 3)
+            raise Exception("Error retrieving zones information")
+        
+        for i in range(len(zones)):
+                if zones[i]["name"] in self.zone_names:
+                    self.tado_id_to_zone_id[zones[i]["id"]] = self.zone_names[zones[i]["name"]]
+
+    def get_home_id(self):
+        self.validate_access_token()
+
+        [me, status] = self.fetch("https://my.tado.com/api/v2/me", access_token=self.access_token)
+        if status != 200:
+            raise Exception("Error retrieving user information")
+        
+        return me["homes"][0]["id"]
+
+    def validate_access_token(self):
+        if self.access_token == None:
+            self.get_access_token()
+        if self.expires_at <= time.time():
+            self.refresh_access_token()
     
     def get_current_state(self):
         try:
-            if self.access_token == None or self.refresh_token == None:
-                self.get_access_token()
-            if self.expires_at <= time.time():
-                self.refresh_access_token()
+            self.validate_access_token()
         except:
             pass
     
