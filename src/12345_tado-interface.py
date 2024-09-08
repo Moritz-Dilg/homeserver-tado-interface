@@ -26,17 +26,16 @@ class Tado_interface12345(hsl20_4.BaseModule):
         self.PIN_O_ACTUAL_1=2
         self.PIN_O_TARGET_1=3
         self.PIN_O_HUMIDITY_1=4
-        self.PIN_O_BATTERY_1=5
-        self.PIN_O_DEBUG_1=6
-        self.PIN_O_DEBUG_2=7
-        self.PIN_O_DEBUG_3=8
-        self.PIN_O_DEBUG_4=9
-        self.PIN_O_DEBUG_5=10
-        self.PIN_O_DEBUG_6=11
-        self.PIN_O_DEBUG_7=12
-        self.PIN_O_DEBUG_8=13
-        self.PIN_O_DEBUG_9=14
-        self.PIN_O_DEBUG_10=15
+        self.PIN_O_DEBUG_1=5
+        self.PIN_O_DEBUG_2=6
+        self.PIN_O_DEBUG_3=7
+        self.PIN_O_DEBUG_4=8
+        self.PIN_O_DEBUG_5=9
+        self.PIN_O_DEBUG_6=10
+        self.PIN_O_DEBUG_7=11
+        self.PIN_O_DEBUG_8=12
+        self.PIN_O_DEBUG_9=13
+        self.PIN_O_DEBUG_10=14
 
 ########################################################################################################
 #### Own written code can be placed after this commentblock . Do not change or delete commentblock! ####
@@ -46,6 +45,7 @@ class Tado_interface12345(hsl20_4.BaseModule):
         self.access_token = None
         self.refresh_token = None
         self.expires_at = None
+        self.home_id = None
         self.zone_names = {}
         self.tado_id_to_zone_id = {}
 
@@ -67,8 +67,10 @@ class Tado_interface12345(hsl20_4.BaseModule):
     def update_zones(self):
         self.validate_access_token()
 
-        home_id = self.get_home_id()
-        [zones, status] = self.fetch("https://my.tado.com/api/v2/homes/" + str(home_id) + "/zones?ngsw-bypass=true", access_token=self.access_token)
+        if not self.home_id:
+            self.get_home_id()
+        
+        [zones, status] = self.fetch("https://my.tado.com/api/v2/homes/" + str(self.home_id) + "/zones?ngsw-bypass=true", access_token=self.access_token)
         if status != 200:
             self._set_output_value(self.PIN_O_EXCEPTION, 3)
             raise Exception("Error retrieving zones information")
@@ -84,7 +86,7 @@ class Tado_interface12345(hsl20_4.BaseModule):
         if status != 200:
             raise Exception("Error retrieving user information")
         
-        return me["homes"][0]["id"]
+        self.home_id = me["homes"][0]["id"]
 
     def validate_access_token(self):
         if self.access_token == None:
@@ -95,9 +97,35 @@ class Tado_interface12345(hsl20_4.BaseModule):
     def get_current_state(self):
         try:
             self.validate_access_token()
+
+            if not self.home_id:
+                self.get_home_id()
+
+            [zoneStates, status] = self.fetch("https://my.tado.com/api/v2/homes/" + str(self.home_id) + "/zoneStates", access_token=self.access_token)
+
+            if status != 200:
+                self._set_output_value(self.PIN_O_EXCEPTION, 2)
+                raise Exception("Error retrieving zone states")
+            
+            zoneStates = zoneStates["zoneStates"]
+            for tado_id in self.tado_id_to_zone_id:
+                zone_id = self.tado_id_to_zone_id[tado_id]
+                current_zone = zoneStates[str(tado_id)]
+                actual = current_zone["sensorDataPoints"]["insideTemperature"]["celsius"]
+                target = current_zone["setting"]["temperature"]["celsius"]
+                humidity = current_zone["sensorDataPoints"]["humidity"]["percentage"]
+
+                if zone_id == 1:
+                    self.set_output_zone_states(self.PIN_O_ACTUAL_1, actual, target, humidity)
+
         except:
             pass
     
+    def set_output_zone_states(self, zone_actual_pin_id, actual, target, humidity):
+        self._set_output_value(zone_actual_pin_id, actual)
+        self._set_output_value(zone_actual_pin_id + 1, target)
+        self._set_output_value(zone_actual_pin_id + 2, humidity)
+
     def refresh_access_token(self):
         if self.refresh_token == None:
             self.get_access_token()
