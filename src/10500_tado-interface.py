@@ -21,21 +21,106 @@ class Tado_interface10500(hsl20_4.BaseModule):
         self.PIN_I_EMAIL=2
         self.PIN_I_PASSWORD=3
         self.PIN_I_ZONE_1=4
-        self.PIN_I_TARGET=5
+        self.PIN_I_TARGET_1=5
+        self.PIN_I_ZONE_2=6
+        self.PIN_I_TARGET_2=7
+        self.PIN_I_ZONE_3=8
+        self.PIN_I_TARGET_3=9
+        self.PIN_I_ZONE_4=10
+        self.PIN_I_TARGET_4=11
+        self.PIN_I_ZONE_5=12
+        self.PIN_I_TARGET_5=13
+        self.PIN_I_ZONE_6=14
+        self.PIN_I_TARGET_6=15
+        self.PIN_I_ZONE_7=16
+        self.PIN_I_TARGET_7=17
+        self.PIN_I_ZONE_8=18
+        self.PIN_I_TARGET_8=19
+        self.PIN_I_ZONE_9=20
+        self.PIN_I_TARGET_9=21
+        self.PIN_I_ZONE_10=22
+        self.PIN_I_TARGET_10=23
+        self.PIN_I_ZONE_11=24
+        self.PIN_I_TARGET_11=25
+        self.PIN_I_ZONE_12=26
+        self.PIN_I_TARGET_12=27
+        self.PIN_I_ZONE_13=28
+        self.PIN_I_TARGET_13=29
+        self.PIN_I_ZONE_14=30
+        self.PIN_I_TARGET_14=31
+        self.PIN_I_ZONE_15=32
+        self.PIN_I_TARGET_15=33
+        self.PIN_I_ZONE_16=34
+        self.PIN_I_TARGET_16=35
+        self.PIN_I_ZONE_17=36
+        self.PIN_I_TARGET_17=37
+        self.PIN_I_ZONE_18=38
+        self.PIN_I_TARGET_18=39
+        self.PIN_I_ZONE_19=40
+        self.PIN_I_TARGET_19=41
+        self.PIN_I_ZONE_20=42
+        self.PIN_I_TARGET_20=43
         self.PIN_O_EXCEPTION=1
         self.PIN_O_ACTUAL_1=2
         self.PIN_O_TARGET_1=3
         self.PIN_O_HUMIDITY_1=4
-        self.PIN_O_DEBUG_1=5
-        self.PIN_O_DEBUG_2=6
-        self.PIN_O_DEBUG_3=7
-        self.PIN_O_DEBUG_4=8
-        self.PIN_O_DEBUG_5=9
-        self.PIN_O_DEBUG_6=10
-        self.PIN_O_DEBUG_7=11
-        self.PIN_O_DEBUG_8=12
-        self.PIN_O_DEBUG_9=13
-        self.PIN_O_DEBUG_10=14
+        self.PIN_O_ACTUAL_2=5
+        self.PIN_O_TARGET_2=6
+        self.PIN_O_HUMIDITY_2=7
+        self.PIN_O_ACTUAL_3=8
+        self.PIN_O_TARGET_3=9
+        self.PIN_O_HUMIDITY_3=10
+        self.PIN_O_ACTUAL_4=11
+        self.PIN_O_TARGET_4=12
+        self.PIN_O_HUMIDITY_4=13
+        self.PIN_O_ACTUAL_5=14
+        self.PIN_O_TARGET_5=15
+        self.PIN_O_HUMIDITY_5=16
+        self.PIN_O_ACTUAL_6=17
+        self.PIN_O_TARGET_6=18
+        self.PIN_O_HUMIDITY_6=19
+        self.PIN_O_ACTUAL_7=20
+        self.PIN_O_TARGET_7=21
+        self.PIN_O_HUMIDITY_7=22
+        self.PIN_O_ACTUAL_8=23
+        self.PIN_O_TARGET_8=24
+        self.PIN_O_HUMIDITY_8=25
+        self.PIN_O_ACTUAL_9=26
+        self.PIN_O_TARGET_9=27
+        self.PIN_O_HUMIDITY_9=28
+        self.PIN_O_ACTUAL_10=29
+        self.PIN_O_TARGET_10=30
+        self.PIN_O_HUMIDITY_10=31
+        self.PIN_O_ACTUAL_11=32
+        self.PIN_O_TARGET_11=33
+        self.PIN_O_HUMIDITY_11=34
+        self.PIN_O_ACTUAL_12=35
+        self.PIN_O_TARGET_12=36
+        self.PIN_O_HUMIDITY_12=37
+        self.PIN_O_ACTUAL_13=38
+        self.PIN_O_TARGET_13=39
+        self.PIN_O_HUMIDITY_13=40
+        self.PIN_O_ACTUAL_14=41
+        self.PIN_O_TARGET_14=42
+        self.PIN_O_HUMIDITY_14=43
+        self.PIN_O_ACTUAL_15=44
+        self.PIN_O_TARGET_15=45
+        self.PIN_O_HUMIDITY_15=46
+        self.PIN_O_ACTUAL_16=47
+        self.PIN_O_TARGET_16=48
+        self.PIN_O_HUMIDITY_16=49
+        self.PIN_O_ACTUAL_17=50
+        self.PIN_O_TARGET_17=51
+        self.PIN_O_HUMIDITY_17=52
+        self.PIN_O_ACTUAL_18=53
+        self.PIN_O_TARGET_18=54
+        self.PIN_O_HUMIDITY_18=55
+        self.PIN_O_ACTUAL_19=56
+        self.PIN_O_TARGET_19=57
+        self.PIN_O_HUMIDITY_19=58
+        self.PIN_O_ACTUAL_20=59
+        self.PIN_O_TARGET_20=60
+        self.PIN_O_HUMIDITY_20=61
 
 ########################################################################################################
 #### Own written code can be placed after this commentblock . Do not change or delete commentblock! ####
@@ -55,14 +140,55 @@ class Tado_interface10500(hsl20_4.BaseModule):
         elif index in [self.PIN_I_EMAIL, self.PIN_I_PASSWORD]:
             pass
         elif index == self.PIN_I_ZONE_1:
-            self.zone_names[value] = 1
-            try:
-                self.update_zones()
-            except:
-                pass
+            self.set_zone_name(1, value)
+        elif index == self.PIN_I_ZONE_2:
+            self.set_zone_name(2, value)
+        elif index == self.PIN_I_ZONE_3:
+            self.set_zone_name(3, value)
+        elif index == self.PIN_I_ZONE_4:
+            self.set_zone_name(4, value)
+        elif index == self.PIN_I_ZONE_5:
+            self.set_zone_name(5, value)
+        elif index == self.PIN_I_ZONE_6:
+            self.set_zone_name(6, value)
+        elif index == self.PIN_I_ZONE_7:
+            self.set_zone_name(7, value)
+        elif index == self.PIN_I_ZONE_8:
+            self.set_zone_name(8, value)
+        elif index == self.PIN_I_ZONE_9:
+            self.set_zone_name(9, value)
+        elif index == self.PIN_I_ZONE_10:
+            self.set_zone_name(10, value)
+        elif index == self.PIN_I_ZONE_11:
+            self.set_zone_name(11, value)
+        elif index == self.PIN_I_ZONE_12:
+            self.set_zone_name(12, value)
+        elif index == self.PIN_I_ZONE_13:
+            self.set_zone_name(13, value)
+        elif index == self.PIN_I_ZONE_14:
+            self.set_zone_name(14, value)
+        elif index == self.PIN_I_ZONE_15:
+            self.set_zone_name(15, value)
+        elif index == self.PIN_I_ZONE_16:
+            self.set_zone_name(16, value)
+        elif index == self.PIN_I_ZONE_17:
+            self.set_zone_name(17, value)
+        elif index == self.PIN_I_ZONE_18:
+            self.set_zone_name(18, value)
+        elif index == self.PIN_I_ZONE_19:
+            self.set_zone_name(19, value)
+        elif index == self.PIN_I_ZONE_20:
+            self.set_zone_name(20, value)
         elif index == self.PIN_I_TARGET:
             self.set_zone(1, value)
         pass
+    
+    def set_zone_name(self, zone_id, zone_name):
+        self.zone_names[zone_name] = zone_id
+        try:
+            self.update_zones()
+        except:
+            pass
 
     def set_zone(self, zone_id, temperature):
         tado_id = list(self.tado_id_to_zone_id.keys())[list(self.tado_id_to_zone_id.values()).index(zone_id)]
@@ -141,6 +267,44 @@ class Tado_interface10500(hsl20_4.BaseModule):
 
                 if zone_id == 1:
                     self.set_output_zone_states(self.PIN_O_ACTUAL_1, actual, target, humidity)
+                elif zone_id == 2:
+                    self.set_output_zone_states(self.PIN_O_ACTUAL_2, actual, target, humidity)
+                elif zone_id == 3:
+                    self.set_output_zone_states(self.PIN_O_ACTUAL_3, actual, target, humidity)
+                elif zone_id == 4:
+                    self.set_output_zone_states(self.PIN_O_ACTUAL_4, actual, target, humidity)
+                elif zone_id == 5:
+                    self.set_output_zone_states(self.PIN_O_ACTUAL_5, actual, target, humidity)
+                elif zone_id == 6:
+                    self.set_output_zone_states(self.PIN_O_ACTUAL_6, actual, target, humidity)
+                elif zone_id == 7:
+                    self.set_output_zone_states(self.PIN_O_ACTUAL_7, actual, target, humidity)
+                elif zone_id == 8:
+                    self.set_output_zone_states(self.PIN_O_ACTUAL_8, actual, target, humidity)
+                elif zone_id == 9:
+                    self.set_output_zone_states(self.PIN_O_ACTUAL_9, actual, target, humidity)
+                elif zone_id == 10:
+                    self.set_output_zone_states(self.PIN_O_ACTUAL_10, actual, target, humidity)
+                elif zone_id == 11:
+                    self.set_output_zone_states(self.PIN_O_ACTUAL_11, actual, target, humidity)
+                elif zone_id == 12:
+                    self.set_output_zone_states(self.PIN_O_ACTUAL_12, actual, target, humidity)
+                elif zone_id == 13:
+                    self.set_output_zone_states(self.PIN_O_ACTUAL_13, actual, target, humidity)
+                elif zone_id == 14:
+                    self.set_output_zone_states(self.PIN_O_ACTUAL_14, actual, target, humidity)
+                elif zone_id == 15:
+                    self.set_output_zone_states(self.PIN_O_ACTUAL_15, actual, target, humidity)
+                elif zone_id == 16:
+                    self.set_output_zone_states(self.PIN_O_ACTUAL_16, actual, target, humidity)
+                elif zone_id == 17:
+                    self.set_output_zone_states(self.PIN_O_ACTUAL_17, actual, target, humidity)
+                elif zone_id == 18:
+                    self.set_output_zone_states(self.PIN_O_ACTUAL_18, actual, target, humidity)
+                elif zone_id == 19:
+                    self.set_output_zone_states(self.PIN_O_ACTUAL_19, actual, target, humidity)
+                elif zone_id == 20:
+                    self.set_output_zone_states(self.PIN_O_ACTUAL_20, actual, target, humidity)
 
         except:
             pass
