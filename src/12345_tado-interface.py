@@ -61,8 +61,32 @@ class Tado_interface12345(hsl20_4.BaseModule):
             except:
                 pass
         elif index == self.PIN_I_TARGET:
-            pass
+            self.set_zone(1, value)
         pass
+
+    def set_zone(self, zone_id, temperature):
+        tado_id = list(self.tado_id_to_zone_id.keys())[list(self.tado_id_to_zone_id.values()).index(zone_id)]
+
+        if not self.home_id:
+            self.get_home_id()
+        
+        payload = {
+        	"termination": {
+        		"typeSkillBasedApp": "NEXT_TIME_BLOCK"
+        	},
+        	"setting":{
+        		"type": "HEATING",
+        		"power": "ON",
+        		"temperature": {
+        			"celsius": temperature
+        			},
+                "isBoost":False
+            }
+        }
+        [response, status] = self.fetch("https://my.tado.com/api/v2/homes/" + str(self.home_id) + "/zones/" + str(tado_id) + "/overlay?ngsw-bypass=true", method="PUT", body=payload, bodyType="JSON", access_token=self.access_token)
+        if status != 200:
+            self._set_output_value(self.PIN_O_EXCEPTION, 6)
+            raise Exception("Error setting target temperature")
 
     def update_zones(self):
         self.validate_access_token()
@@ -70,7 +94,7 @@ class Tado_interface12345(hsl20_4.BaseModule):
         if not self.home_id:
             self.get_home_id()
         
-        [zones, status] = self.fetch("https://my.tado.com/api/v2/homes/" + str(self.home_id) + "/zones?ngsw-bypass=true", access_token=self.access_token)
+        [zones, status] = self.fetch("https://my.tado.com/api/v2/homes/" + str(self.home_id) + "/zones?ngsw-bypass=true", method="GET", access_token=self.access_token)
         if status != 200:
             self._set_output_value(self.PIN_O_EXCEPTION, 3)
             raise Exception("Error retrieving zones information")
@@ -82,7 +106,7 @@ class Tado_interface12345(hsl20_4.BaseModule):
     def get_home_id(self):
         self.validate_access_token()
 
-        [me, status] = self.fetch("https://my.tado.com/api/v2/me", access_token=self.access_token)
+        [me, status] = self.fetch("https://my.tado.com/api/v2/me", method="GET", access_token=self.access_token)
         if status != 200:
             raise Exception("Error retrieving user information")
         
@@ -101,7 +125,7 @@ class Tado_interface12345(hsl20_4.BaseModule):
             if not self.home_id:
                 self.get_home_id()
 
-            [zoneStates, status] = self.fetch("https://my.tado.com/api/v2/homes/" + str(self.home_id) + "/zoneStates", access_token=self.access_token)
+            [zoneStates, status] = self.fetch("https://my.tado.com/api/v2/homes/" + str(self.home_id) + "/zoneStates", method="GET", access_token=self.access_token)
 
             if status != 200:
                 self._set_output_value(self.PIN_O_EXCEPTION, 2)
@@ -137,7 +161,7 @@ class Tado_interface12345(hsl20_4.BaseModule):
         }
         payload["refresh_token"] = self.refresh_token
 
-        [auth, status_auth] = self.fetch("https://auth.tado.com/oauth/token", body=payload, bodyType="x-www-form-urlencoded")
+        [auth, status_auth] = self.fetch("https://auth.tado.com/oauth/token", body=payload, bodyType="x-www-form-urlencoded", method="POST")
         if status_auth != 200:
             raise Exception("Error regenerating access token")
         
@@ -161,7 +185,7 @@ class Tado_interface12345(hsl20_4.BaseModule):
         payload["username"] = username
         payload["password"] = password
 
-        [auth, status_auth] = self.fetch("https://auth.tado.com/oauth/token", body=payload, bodyType="x-www-form-urlencoded")
+        [auth, status_auth] = self.fetch("https://auth.tado.com/oauth/token", body=payload, bodyType="x-www-form-urlencoded", method="POST")
         if status_auth != 200:
             raise Exception("Error authenticating user")
         
@@ -169,15 +193,17 @@ class Tado_interface12345(hsl20_4.BaseModule):
         self.refresh_token = auth["refresh_token"]
         self.expires_at = time.time() + auth["expires_in"]
 
-    def fetch(self, url, body = None, bodyType = None, access_token = None):
+    def fetch(self, url, method = None, body = None, bodyType = None, access_token = None):
         """
         Fetch resources from the provided URL   
 
         :param url: The URL to fetch the resource from (http and https)
         :type url: string
+        :param method: The method the fetch the resource with (`GET`, `POST`, `PUT`, or `DELETE`)
+	    :type method: string
         :param body: The request body
         :type body: dict or None
-        :param body_type: The type of the request body (`None` or `x-www-form-urlencoded`)
+        :param body_type: The type of the request body (`None`, `x-www-form-urlencoded` or `JSON`)
         :type body_type: string or None
         :param access_token: Authenticate with the OAuth2.0 authentication flow and a Bearer token
         :type access_token: string or None
@@ -189,12 +215,17 @@ class Tado_interface12345(hsl20_4.BaseModule):
         # Build a SSL Context to disable certificate verification.
         ctx = ssl._create_unverified_context()
         # Build a http request and add an authorization header or a form data body
-        request = urllib2.Request(url)
+        request = request_method(url, method=method)
         if access_token != None:
             request.add_header("Authorization", "Bearer " + access_token)
         if bodyType == "x-www-form-urlencoded":
             data = urllib.urlencode(body)
             data = data.encode("ascii")
+            request.add_data(data)
+        elif bodyType == "JSON":
+            request.add_header('Content-Type', 'application/json')
+            data = json.dumps(body)
+            data = data.encode('ascii')
             request.add_data(data)
 
         try:
@@ -211,3 +242,14 @@ class Tado_interface12345(hsl20_4.BaseModule):
             # Return the response if the request was successful
             response_data = response.read()
             return [json.loads(response_data), 200]
+
+class request_method(urllib2.Request):
+    def __init__(self, url, data=None, headers={}, origin_req_host=None, unverifiable=False, method=None):
+        urllib2.Request.__init__(self, url, data, headers, origin_req_host, unverifiable)
+        self.method = method
+
+    def get_method(self):
+        if self.method:
+            return self.method
+
+        return urllib2.Request.get_method(self)
