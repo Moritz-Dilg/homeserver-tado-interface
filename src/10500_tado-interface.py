@@ -11,7 +11,7 @@ import time
 ########################################################################################################
 ##** Code created by generator - DO NOT CHANGE! **##
 
-class Tado_interface12345(hsl20_4.BaseModule):
+class Tado_interface10500(hsl20_4.BaseModule):
 
     def __init__(self, homeserver_context):
         hsl20_4.BaseModule.__init__(self, homeserver_context, "tado_interface")
