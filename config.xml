@@ -1,50 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
 <config>
     <modules>
-        <module category="tado-interface" context="tado-interface" id="10500" internal_name="tado-interface" external_name="Tado Interface" version="0.0.9">
+        <module category="tado-interface" context="tado-interface" id="10500" internal_name="tado-interface" external_name="Tado Interface" version="0.0.10">
             <inputs>
 				<input type="number" const_name="trigger">Trigger</input>
 				<input type="string" const_name="email">E-Mail</input>
 				<input type="string" const_name="password">Passwort</input>
 				<input type="string" const_name="zone_1">Zone 1 (Name)</input>
-				<input type="number" const_name="target_1" init_value="-1">Vorgabe Sollwert Zone 1</input>
 				<input type="string" const_name="zone_2">Zone 2 (Name)</input>
-				<input type="number" const_name="target_2" init_value="-1">Vorgabe Sollwert Zone 2</input>
 				<input type="string" const_name="zone_3">Zone 3 (Name)</input>
-				<input type="number" const_name="target_3" init_value="-1">Vorgabe Sollwert Zone 3</input>
 				<input type="string" const_name="zone_4">Zone 4 (Name)</input>
-				<input type="number" const_name="target_4" init_value="-1">Vorgabe Sollwert Zone 4</input>
 				<input type="string" const_name="zone_5">Zone 5 (Name)</input>
-				<input type="number" const_name="target_5" init_value="-1">Vorgabe Sollwert Zone 5</input>
 				<input type="string" const_name="zone_6">Zone 6 (Name)</input>
-				<input type="number" const_name="target_6" init_value="-1">Vorgabe Sollwert Zone 6</input>
 				<input type="string" const_name="zone_7">Zone 7 (Name)</input>
-				<input type="number" const_name="target_7" init_value="-1">Vorgabe Sollwert Zone 7</input>
 				<input type="string" const_name="zone_8">Zone 8 (Name)</input>
-				<input type="number" const_name="target_8" init_value="-1">Vorgabe Sollwert Zone 8</input>
 				<input type="string" const_name="zone_9">Zone 9 (Name)</input>
-				<input type="number" const_name="target_9" init_value="-1">Vorgabe Sollwert Zone 9</input>
 				<input type="string" const_name="zone_10">Zone 10 (Name)</input>
-				<input type="number" const_name="target_10" init_value="-1">Vorgabe Sollwert Zone 10</input>
 				<input type="string" const_name="zone_11">Zone 11 (Name)</input>
-				<input type="number" const_name="target_11" init_value="-1">Vorgabe Sollwert Zone 11</input>
 				<input type="string" const_name="zone_12">Zone 12 (Name)</input>
-				<input type="number" const_name="target_12" init_value="-1">Vorgabe Sollwert Zone 12</input>
 				<input type="string" const_name="zone_13">Zone 13 (Name)</input>
-				<input type="number" const_name="target_13" init_value="-1">Vorgabe Sollwert Zone 13</input>
 				<input type="string" const_name="zone_14">Zone 14 (Name)</input>
-				<input type="number" const_name="target_14" init_value="-1">Vorgabe Sollwert Zone 14</input>
 				<input type="string" const_name="zone_15">Zone 15 (Name)</input>
-				<input type="number" const_name="target_15" init_value="-1">Vorgabe Sollwert Zone 15</input>
 				<input type="string" const_name="zone_16">Zone 16 (Name)</input>
-				<input type="number" const_name="target_16" init_value="-1">Vorgabe Sollwert Zone 16</input>
 				<input type="string" const_name="zone_17">Zone 17 (Name)</input>
-				<input type="number" const_name="target_17" init_value="-1">Vorgabe Sollwert Zone 17</input>
 				<input type="string" const_name="zone_18">Zone 18 (Name)</input>
-				<input type="number" const_name="target_18" init_value="-1">Vorgabe Sollwert Zone 18</input>
 				<input type="string" const_name="zone_19">Zone 19 (Name)</input>
-				<input type="number" const_name="target_19" init_value="-1">Vorgabe Sollwert Zone 19</input>
 				<input type="string" const_name="zone_20">Zone 20 (Name)</input>
+				<input type="number" const_name="target_1" init_value="-1">Vorgabe Sollwert Zone 1</input>
+				<input type="number" const_name="target_2" init_value="-1">Vorgabe Sollwert Zone 2</input>
+				<input type="number" const_name="target_3" init_value="-1">Vorgabe Sollwert Zone 3</input>
+				<input type="number" const_name="target_4" init_value="-1">Vorgabe Sollwert Zone 4</input>
+				<input type="number" const_name="target_5" init_value="-1">Vorgabe Sollwert Zone 5</input>
+				<input type="number" const_name="target_6" init_value="-1">Vorgabe Sollwert Zone 6</input>
+				<input type="number" const_name="target_7" init_value="-1">Vorgabe Sollwert Zone 7</input>
+				<input type="number" const_name="target_8" init_value="-1">Vorgabe Sollwert Zone 8</input>
+				<input type="number" const_name="target_9" init_value="-1">Vorgabe Sollwert Zone 9</input>
+				<input type="number" const_name="target_10" init_value="-1">Vorgabe Sollwert Zone 10</input>
+				<input type="number" const_name="target_11" init_value="-1">Vorgabe Sollwert Zone 11</input>
+				<input type="number" const_name="target_12" init_value="-1">Vorgabe Sollwert Zone 12</input>
+				<input type="number" const_name="target_13" init_value="-1">Vorgabe Sollwert Zone 13</input>
+				<input type="number" const_name="target_14" init_value="-1">Vorgabe Sollwert Zone 14</input>
+				<input type="number" const_name="target_15" init_value="-1">Vorgabe Sollwert Zone 15</input>
+				<input type="number" const_name="target_16" init_value="-1">Vorgabe Sollwert Zone 16</input>
+				<input type="number" const_name="target_17" init_value="-1">Vorgabe Sollwert Zone 17</input>
+				<input type="number" const_name="target_18" init_value="-1">Vorgabe Sollwert Zone 18</input>
+				<input type="number" const_name="target_19" init_value="-1">Vorgabe Sollwert Zone 19</input>
 				<input type="number" const_name="target_20" init_value="-1">Vorgabe Sollwert Zone 20</input>
             </inputs>
             <outputs>

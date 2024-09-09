@@ -21,44 +21,44 @@ class Tado_interface10500(hsl20_4.BaseModule):
         self.PIN_I_EMAIL=2
         self.PIN_I_PASSWORD=3
         self.PIN_I_ZONE_1=4
-        self.PIN_I_TARGET_1=5
-        self.PIN_I_ZONE_2=6
-        self.PIN_I_TARGET_2=7
-        self.PIN_I_ZONE_3=8
-        self.PIN_I_TARGET_3=9
-        self.PIN_I_ZONE_4=10
-        self.PIN_I_TARGET_4=11
-        self.PIN_I_ZONE_5=12
-        self.PIN_I_TARGET_5=13
-        self.PIN_I_ZONE_6=14
-        self.PIN_I_TARGET_6=15
-        self.PIN_I_ZONE_7=16
-        self.PIN_I_TARGET_7=17
-        self.PIN_I_ZONE_8=18
-        self.PIN_I_TARGET_8=19
-        self.PIN_I_ZONE_9=20
-        self.PIN_I_TARGET_9=21
-        self.PIN_I_ZONE_10=22
-        self.PIN_I_TARGET_10=23
-        self.PIN_I_ZONE_11=24
-        self.PIN_I_TARGET_11=25
-        self.PIN_I_ZONE_12=26
-        self.PIN_I_TARGET_12=27
-        self.PIN_I_ZONE_13=28
-        self.PIN_I_TARGET_13=29
-        self.PIN_I_ZONE_14=30
-        self.PIN_I_TARGET_14=31
-        self.PIN_I_ZONE_15=32
-        self.PIN_I_TARGET_15=33
-        self.PIN_I_ZONE_16=34
-        self.PIN_I_TARGET_16=35
-        self.PIN_I_ZONE_17=36
-        self.PIN_I_TARGET_17=37
-        self.PIN_I_ZONE_18=38
-        self.PIN_I_TARGET_18=39
-        self.PIN_I_ZONE_19=40
-        self.PIN_I_TARGET_19=41
-        self.PIN_I_ZONE_20=42
+        self.PIN_I_ZONE_2=5
+        self.PIN_I_ZONE_3=6
+        self.PIN_I_ZONE_4=7
+        self.PIN_I_ZONE_5=8
+        self.PIN_I_ZONE_6=9
+        self.PIN_I_ZONE_7=10
+        self.PIN_I_ZONE_8=11
+        self.PIN_I_ZONE_9=12
+        self.PIN_I_ZONE_10=13
+        self.PIN_I_ZONE_11=14
+        self.PIN_I_ZONE_12=15
+        self.PIN_I_ZONE_13=16
+        self.PIN_I_ZONE_14=17
+        self.PIN_I_ZONE_15=18
+        self.PIN_I_ZONE_16=19
+        self.PIN_I_ZONE_17=20
+        self.PIN_I_ZONE_18=21
+        self.PIN_I_ZONE_19=22
+        self.PIN_I_ZONE_20=23
+        self.PIN_I_TARGET_1=24
+        self.PIN_I_TARGET_2=25
+        self.PIN_I_TARGET_3=26
+        self.PIN_I_TARGET_4=27
+        self.PIN_I_TARGET_5=28
+        self.PIN_I_TARGET_6=29
+        self.PIN_I_TARGET_7=30
+        self.PIN_I_TARGET_8=31
+        self.PIN_I_TARGET_9=32
+        self.PIN_I_TARGET_10=33
+        self.PIN_I_TARGET_11=34
+        self.PIN_I_TARGET_12=35
+        self.PIN_I_TARGET_13=36
+        self.PIN_I_TARGET_14=37
+        self.PIN_I_TARGET_15=38
+        self.PIN_I_TARGET_16=39
+        self.PIN_I_TARGET_17=40
+        self.PIN_I_TARGET_18=41
+        self.PIN_I_TARGET_19=42
         self.PIN_I_TARGET_20=43
         self.PIN_O_EXCEPTION=1
         self.PIN_O_ACTUAL_1=2
@@ -133,9 +133,15 @@ class Tado_interface10500(hsl20_4.BaseModule):
         self.home_id = None
         self.zone_names = {}
         self.tado_id_to_zone_id = {}
+        self.first_trigger = True
 
     def on_input_value(self, index, value):
         if index == self.PIN_I_TRIGGER:
+            # Set the zone names that are provided as fixed values at the first time this logic block is triggered
+            if self.first_trigger == True:
+                self.first_trigger = False
+                self.set_zone_names_if_fixed_value()
+            
             self.get_current_state()
         elif index in [self.PIN_I_EMAIL, self.PIN_I_PASSWORD]:
             pass
@@ -183,6 +189,14 @@ class Tado_interface10500(hsl20_4.BaseModule):
             self.set_zone(1, value)
         pass
     
+    def set_zone_names_if_fixed_value(self):
+        for i in range(self.PIN_I_ZONE_1, self.PIN_I_ZONE_20):
+            self.zone_names[self._get_input_value(i)] = i - self.PIN_I_ZONE_1
+        try:
+            self.update_zones()
+        except:
+            pass
+
     def set_zone_name(self, zone_id, zone_name):
         self.zone_names[zone_name] = zone_id
         try:
