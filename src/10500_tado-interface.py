@@ -240,47 +240,7 @@ class Tado_interface10500(hsl20_4.BaseModule):
                 target = current_zone["setting"]["temperature"]["celsius"]
                 humidity = current_zone["sensorDataPoints"]["humidity"]["percentage"]
 
-                if zone_id == 1:
-                    self.set_output_zone_states(self.PIN_O_ACTUAL_1, actual, target, humidity)
-                elif zone_id == 2:
-                    self.set_output_zone_states(self.PIN_O_ACTUAL_2, actual, target, humidity)
-                elif zone_id == 3:
-                    self.set_output_zone_states(self.PIN_O_ACTUAL_3, actual, target, humidity)
-                elif zone_id == 4:
-                    self.set_output_zone_states(self.PIN_O_ACTUAL_4, actual, target, humidity)
-                elif zone_id == 5:
-                    self.set_output_zone_states(self.PIN_O_ACTUAL_5, actual, target, humidity)
-                elif zone_id == 6:
-                    self.set_output_zone_states(self.PIN_O_ACTUAL_6, actual, target, humidity)
-                elif zone_id == 7:
-                    self.set_output_zone_states(self.PIN_O_ACTUAL_7, actual, target, humidity)
-                elif zone_id == 8:
-                    self.set_output_zone_states(self.PIN_O_ACTUAL_8, actual, target, humidity)
-                elif zone_id == 9:
-                    self.set_output_zone_states(self.PIN_O_ACTUAL_9, actual, target, humidity)
-                elif zone_id == 10:
-                    self.set_output_zone_states(self.PIN_O_ACTUAL_10, actual, target, humidity)
-                elif zone_id == 11:
-                    self.set_output_zone_states(self.PIN_O_ACTUAL_11, actual, target, humidity)
-                elif zone_id == 12:
-                    self.set_output_zone_states(self.PIN_O_ACTUAL_12, actual, target, humidity)
-                elif zone_id == 13:
-                    self.set_output_zone_states(self.PIN_O_ACTUAL_13, actual, target, humidity)
-                elif zone_id == 14:
-                    self.set_output_zone_states(self.PIN_O_ACTUAL_14, actual, target, humidity)
-                elif zone_id == 15:
-                    self.set_output_zone_states(self.PIN_O_ACTUAL_15, actual, target, humidity)
-                elif zone_id == 16:
-                    self.set_output_zone_states(self.PIN_O_ACTUAL_16, actual, target, humidity)
-                elif zone_id == 17:
-                    self.set_output_zone_states(self.PIN_O_ACTUAL_17, actual, target, humidity)
-                elif zone_id == 18:
-                    self.set_output_zone_states(self.PIN_O_ACTUAL_18, actual, target, humidity)
-                elif zone_id == 19:
-                    self.set_output_zone_states(self.PIN_O_ACTUAL_19, actual, target, humidity)
-                elif zone_id == 20:
-                    self.set_output_zone_states(self.PIN_O_ACTUAL_20, actual, target, humidity)
-
+                self.set_output_zone_states(3 * zone_id - 1, actual, target, humidity)
         except:
             pass
     
