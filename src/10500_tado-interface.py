@@ -145,49 +145,10 @@ class Tado_interface10500(hsl20_4.BaseModule):
             self.get_current_state()
         elif index in [self.PIN_I_EMAIL, self.PIN_I_PASSWORD]:
             pass
-        elif index == self.PIN_I_ZONE_1:
-            self.set_zone_name(1, value)
-        elif index == self.PIN_I_ZONE_2:
-            self.set_zone_name(2, value)
-        elif index == self.PIN_I_ZONE_3:
-            self.set_zone_name(3, value)
-        elif index == self.PIN_I_ZONE_4:
-            self.set_zone_name(4, value)
-        elif index == self.PIN_I_ZONE_5:
-            self.set_zone_name(5, value)
-        elif index == self.PIN_I_ZONE_6:
-            self.set_zone_name(6, value)
-        elif index == self.PIN_I_ZONE_7:
-            self.set_zone_name(7, value)
-        elif index == self.PIN_I_ZONE_8:
-            self.set_zone_name(8, value)
-        elif index == self.PIN_I_ZONE_9:
-            self.set_zone_name(9, value)
-        elif index == self.PIN_I_ZONE_10:
-            self.set_zone_name(10, value)
-        elif index == self.PIN_I_ZONE_11:
-            self.set_zone_name(11, value)
-        elif index == self.PIN_I_ZONE_12:
-            self.set_zone_name(12, value)
-        elif index == self.PIN_I_ZONE_13:
-            self.set_zone_name(13, value)
-        elif index == self.PIN_I_ZONE_14:
-            self.set_zone_name(14, value)
-        elif index == self.PIN_I_ZONE_15:
-            self.set_zone_name(15, value)
-        elif index == self.PIN_I_ZONE_16:
-            self.set_zone_name(16, value)
-        elif index == self.PIN_I_ZONE_17:
-            self.set_zone_name(17, value)
-        elif index == self.PIN_I_ZONE_18:
-            self.set_zone_name(18, value)
-        elif index == self.PIN_I_ZONE_19:
-            self.set_zone_name(19, value)
-        elif index == self.PIN_I_ZONE_20:
-            self.set_zone_name(20, value)
-        elif index == self.PIN_I_TARGET:
-            self.set_zone(1, value)
-        pass
+        elif index in range(self.PIN_I_ZONE_1, self.PIN_I_ZONE_20 + 1):
+            self.set_zone_name(index - self.PIN_I_ZONE_1 + 1, value)
+        elif index in range(self.PIN_I_TARGET_1, self.PIN_I_TARGET_20 + 1):
+            self.set_zone(index - self.PIN_I_TARGET_1 + 1, value)
     
     def set_zone_names_if_fixed_value(self):
         for i in range(self.PIN_I_ZONE_1, self.PIN_I_ZONE_20):
