@@ -140,7 +140,7 @@ class Tado_interface10500(hsl20_4.BaseModule):
             # Set the zone names that are provided as fixed values at the first time this logic block is triggered
             if self.first_trigger == True:
                 self.first_trigger = False
-                self.set_zone_names_if_fixed_value()
+                self.set_all_zone_names()
             
             self.get_current_state()
         elif index in [self.PIN_I_EMAIL, self.PIN_I_PASSWORD]:
@@ -148,24 +148,24 @@ class Tado_interface10500(hsl20_4.BaseModule):
         elif index in range(self.PIN_I_ZONE_1, self.PIN_I_ZONE_20 + 1):
             self.set_zone_name(index - self.PIN_I_ZONE_1 + 1, value)
         elif index in range(self.PIN_I_TARGET_1, self.PIN_I_TARGET_20 + 1):
-            self.set_zone(index - self.PIN_I_TARGET_1 + 1, value)
+            self.set_zone_temperature(index - self.PIN_I_TARGET_1 + 1, value)
     
-    def set_zone_names_if_fixed_value(self):
+    def set_all_zone_names(self):
         for i in range(self.PIN_I_ZONE_1, self.PIN_I_ZONE_20 + 1):
             self.zone_names[self._get_input_value(i)] = i - self.PIN_I_ZONE_1 + 1
         try:
-            self.update_zones()
+            self.update_zone_ids()
         except:
             pass
 
     def set_zone_name(self, zone_id, zone_name):
         self.zone_names[zone_name] = zone_id
         try:
-            self.update_zones()
+            self.update_zone_ids()
         except:
             pass
 
-    def set_zone(self, zone_id, temperature):
+    def set_zone_temperature(self, zone_id, temperature):
         tado_id = list(self.tado_id_to_zone_id.keys())[list(self.tado_id_to_zone_id.values()).index(zone_id)]
 
         if not self.home_id:
@@ -189,7 +189,7 @@ class Tado_interface10500(hsl20_4.BaseModule):
             self._set_output_value(self.PIN_O_EXCEPTION, 6)
             raise Exception("Error setting target temperature")
 
-    def update_zones(self):
+    def update_zone_ids(self):
         self.validate_access_token()
 
         if not self.home_id:
