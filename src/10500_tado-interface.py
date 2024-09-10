@@ -151,8 +151,8 @@ class Tado_interface10500(hsl20_4.BaseModule):
             self.set_zone(index - self.PIN_I_TARGET_1 + 1, value)
     
     def set_zone_names_if_fixed_value(self):
-        for i in range(self.PIN_I_ZONE_1, self.PIN_I_ZONE_20):
-            self.zone_names[self._get_input_value(i)] = i - self.PIN_I_ZONE_1
+        for i in range(self.PIN_I_ZONE_1, self.PIN_I_ZONE_20 + 1):
+            self.zone_names[self._get_input_value(i)] = i - self.PIN_I_ZONE_1 + 1
         try:
             self.update_zones()
         except:
