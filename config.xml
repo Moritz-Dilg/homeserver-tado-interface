@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <config>
     <modules>
-        <module category="tado-interface" context="tado-interface" id="10500" internal_name="tado-interface" external_name="Tado Interface" version="0.0.14">
+        <module category="tado-interface" context="tado-interface" id="10500" internal_name="tado-interface" external_name="Tado Interface" version="0.0.15">
             <inputs>
 				<input type="number" const_name="trigger">Trigger</input>
 				<input type="string" const_name="email">E-Mail</input>
@@ -48,7 +48,7 @@
 				<input type="number" const_name="target_20" init_value="-1">Vorgabe Sollwert Zone 20</input>
             </inputs>
             <outputs>
-                <output type="number" const_name="exception" init_value="0">Fehlercode</output>
+                <output type="string" const_name="exception">Fehlercode</output>
 				<output type="number" const_name="actual_1">Istwert Zone 1</output>
 				<output type="number" const_name="target_1">Sollwert Zone 1</output>
 				<output type="number" const_name="humidity_1">Feuchte Zone 1</output>

@@ -136,34 +136,33 @@ class Tado_interface10500(hsl20_4.BaseModule):
         self.first_trigger = True
 
     def on_input_value(self, index, value):
-        if index == self.PIN_I_TRIGGER:
-            # Set the zone names that are provided as fixed values at the first time this logic block is triggered
-            if self.first_trigger == True:
-                self.first_trigger = False
-                self.set_all_zone_names()
+        try:
+            if index == self.PIN_I_TRIGGER:
+                # Set the zone names that are provided as fixed values at the first time this logic block is triggered
+                if self.first_trigger == True:
+                    self.first_trigger = False
+                    self.set_all_zone_names()
+
+                self.get_current_state()
+            elif index in [self.PIN_I_EMAIL, self.PIN_I_PASSWORD]:
+                pass
+            elif index in range(self.PIN_I_ZONE_1, self.PIN_I_ZONE_20 + 1):
+                self.set_zone_name(index - self.PIN_I_ZONE_1 + 1, value)
+            elif index in range(self.PIN_I_TARGET_1, self.PIN_I_TARGET_20 + 1):
+                self.set_zone_temperature(index - self.PIN_I_TARGET_1 + 1, value)
             
-            self.get_current_state()
-        elif index in [self.PIN_I_EMAIL, self.PIN_I_PASSWORD]:
-            pass
-        elif index in range(self.PIN_I_ZONE_1, self.PIN_I_ZONE_20 + 1):
-            self.set_zone_name(index - self.PIN_I_ZONE_1 + 1, value)
-        elif index in range(self.PIN_I_TARGET_1, self.PIN_I_TARGET_20 + 1):
-            self.set_zone_temperature(index - self.PIN_I_TARGET_1 + 1, value)
+        except exception as e:
+            self._set_output_value(self.PIN_O_EXCEPTION, e.get_error_code())
     
     def set_all_zone_names(self):
         for i in range(self.PIN_I_ZONE_1, self.PIN_I_ZONE_20 + 1):
             self.zone_names[self._get_input_value(i)] = i - self.PIN_I_ZONE_1 + 1
-        try:
-            self.update_zone_ids()
-        except:
-            pass
+        self.update_zone_ids()
+
 
     def set_zone_name(self, zone_id, zone_name):
         self.zone_names[zone_name] = zone_id
-        try:
-            self.update_zone_ids()
-        except:
-            pass
+        self.update_zone_ids()
 
     def set_zone_temperature(self, zone_id, temperature):
         tado_id = list(self.tado_id_to_zone_id.keys())[list(self.tado_id_to_zone_id.values()).index(zone_id)]
@@ -186,8 +185,7 @@ class Tado_interface10500(hsl20_4.BaseModule):
         }
         [response, status] = self.fetch("https://my.tado.com/api/v2/homes/" + str(self.home_id) + "/zones/" + str(tado_id) + "/overlay?ngsw-bypass=true", method="PUT", body=payload, bodyType="JSON", access_token=self.access_token)
         if status != 200:
-            self._set_output_value(self.PIN_O_EXCEPTION, 6)
-            raise Exception("Error setting target temperature")
+            raise set_temperature_exception("Error setting target temperature")
 
     def update_zone_ids(self):
         self.validate_access_token()
@@ -197,8 +195,7 @@ class Tado_interface10500(hsl20_4.BaseModule):
         
         [zones, status] = self.fetch("https://my.tado.com/api/v2/homes/" + str(self.home_id) + "/zones?ngsw-bypass=true", method="GET", access_token=self.access_token)
         if status != 200:
-            self._set_output_value(self.PIN_O_EXCEPTION, 3)
-            raise Exception("Error retrieving zones information")
+            raise zone_id_exception("Error retrieving zones information")
         
         for i in range(len(zones)):
                 if zones[i]["name"] in self.zone_names:
@@ -209,7 +206,7 @@ class Tado_interface10500(hsl20_4.BaseModule):
 
         [me, status] = self.fetch("https://my.tado.com/api/v2/me", method="GET", access_token=self.access_token)
         if status != 200:
-            raise Exception("Error retrieving user information")
+            raise home_id_exception("Error retrieving user information")
         
         self.home_id = me["homes"][0]["id"]
 
@@ -220,29 +217,24 @@ class Tado_interface10500(hsl20_4.BaseModule):
             self.refresh_access_token()
     
     def get_current_state(self):
-        try:
-            self.validate_access_token()
-
-            if not self.home_id:
-                self.get_home_id()
-
-            [zoneStates, status] = self.fetch("https://my.tado.com/api/v2/homes/" + str(self.home_id) + "/zoneStates", method="GET", access_token=self.access_token)
-
-            if status != 200:
-                self._set_output_value(self.PIN_O_EXCEPTION, 2)
-                raise Exception("Error retrieving zone states")
-            
-            zoneStates = zoneStates["zoneStates"]
-            for tado_id in self.tado_id_to_zone_id:
-                zone_id = self.tado_id_to_zone_id[tado_id]
-                current_zone = zoneStates[str(tado_id)]
-                actual = current_zone["sensorDataPoints"]["insideTemperature"]["celsius"]
-                target = current_zone["setting"]["temperature"]["celsius"]
-                humidity = current_zone["sensorDataPoints"]["humidity"]["percentage"]
-
-                self.set_output_zone_states(3 * zone_id - 1, actual, target, humidity)
-        except:
-            pass
+        self.validate_access_token()
+        
+        if not self.home_id:
+            self.get_home_id()
+        
+        [zoneStates, status] = self.fetch("https://my.tado.com/api/v2/homes/" + str(self.home_id) + "/zoneStates", method="GET", access_token=self.access_token)
+        if status != 200:
+            raise zone_state_exception("Error retrieving zone states")
+        
+        zoneStates = zoneStates["zoneStates"]
+        for tado_id in self.tado_id_to_zone_id:
+            zone_id = self.tado_id_to_zone_id[tado_id]
+            current_zone = zoneStates[str(tado_id)]
+        
+            actual = current_zone["sensorDataPoints"]["insideTemperature"]["celsius"]
+            target = current_zone["setting"]["temperature"]["celsius"]
+            humidity = current_zone["sensorDataPoints"]["humidity"]["percentage"]
+            self.set_output_zone_states(3 * zone_id - 1, actual, target, humidity)
     
     def set_output_zone_states(self, zone_actual_pin_id, actual, target, humidity):
         self._set_output_value(zone_actual_pin_id, actual)
@@ -262,7 +254,7 @@ class Tado_interface10500(hsl20_4.BaseModule):
 
         [auth, status_auth] = self.fetch("https://auth.tado.com/oauth/token", body=payload, bodyType="x-www-form-urlencoded", method="POST")
         if status_auth != 200:
-            raise Exception("Error regenerating access token")
+            raise authentication_exception("Error regenerating access token")
         
         self.access_token = auth["access_token"]
         self.refresh_token = auth["refresh_token"]
@@ -274,7 +266,7 @@ class Tado_interface10500(hsl20_4.BaseModule):
 
         if username == "" or password == "":
             self._set_output_value(self.PIN_O_EXCEPTION, 1)
-            raise Exception("No username or password provided")
+            raise no_credentials_exception("No username or password provided")
         
         payload = {
     	    "client_id": "tado-web-app",
@@ -286,7 +278,7 @@ class Tado_interface10500(hsl20_4.BaseModule):
 
         [auth, status_auth] = self.fetch("https://auth.tado.com/oauth/token", body=payload, bodyType="x-www-form-urlencoded", method="POST")
         if status_auth != 200:
-            raise Exception("Error authenticating user")
+            raise authentication_exception("Error authenticating user")
         
         self.access_token = auth["access_token"]
         self.refresh_token = auth["refresh_token"]
@@ -332,16 +324,51 @@ class Tado_interface10500(hsl20_4.BaseModule):
             response = urllib2.urlopen(request, context=ctx)
         except urllib2.HTTPError as e:
             if e.code == 401:
-                self._set_output_value(self.PIN_O_EXCEPTION, 4)
-            return [None, e.code]
+                raise unauthorized_request_exception("Unauthorized request")
+            
+            raise unknown_exception("Code: " + str(e.code) + " - " + e.reason)
         except urllib2.URLError as e:
-            self._set_output_value(self.PIN_O_EXCEPTION, 5)
-            return [None, -1]
+            raise unknown_exception(e.reason)
         else:
             # Return the response if the request was successful
             response_data = response.read()
             return [json.loads(response_data), 200]
 
+class exception(Exception):
+    def get_error_code(self):
+        return "I-00"
+
+class unknown_exception(exception):
+    def get_error_code(self):
+        return "I-01: " + self.message
+class no_credentials_exception(exception):
+    def get_error_code(self):
+        return "E-11"
+
+class authentication_exception(exception):
+    def get_error_code(self):
+        return "I-12"
+    
+class unauthorized_request_exception(exception):
+    def get_error_code(self):
+        return "E-13"
+
+class zone_state_exception(exception):
+    def get_error_code(self):
+        return "I-21"
+    
+class home_id_exception(exception):
+    def get_error_code(self):
+        return "I-22"
+
+class zone_id_exception(exception):
+    def get_error_code(self):
+        return "I-23"
+
+class set_temperature_exception(exception):
+    def get_error_code(self):
+        return "I-24"
+    
 class request_method(urllib2.Request):
     def __init__(self, url, data=None, headers={}, origin_req_host=None, unverifiable=False, method=None):
         urllib2.Request.__init__(self, url, data, headers, origin_req_host, unverifiable)
