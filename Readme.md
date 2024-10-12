@@ -28,3 +28,17 @@ Where `[project_name]` is the folder name of your project inside the `projects` 
 ### Usage
 
 To use the logic node, import the compiled or downloaded `.hsl` file by clicking `File` -> `Import` -> `Logic node` in the menu of the HS Expert. After restarting the Expert, you can use it like any other logic node.
+
+## Error codes
+
+| Code           | Reason                                                    |
+|----------------|-----------------------------------------------------------|
+| I-00           | Internal Exception                                        |
+| I-01: [reason] | Unknown Exception - a Reason is stated after the code     |
+| E-11           | No Credentials provided                                   |
+| I-12           | Authentication Exception: User could not be authenticated |
+| E-13           | Unauthorized Request: Incorrect Credentials               |
+| I-21           | Zone States could not be retrieved                        |
+| I-22           | User Information could not be retrieved                   |
+| I-23           | Zone Names could not be retrieved                         |
+| I-24           | Error setting Zone Temperature                            |

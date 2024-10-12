@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <config>
     <modules>
-        <module category="Tado Interface" context="tado-interface" id="14670" internal_name="tado-interface" external_name="Tado Interface" version="1.0.1">
+        <module category="Tado Interface" context="tado-interface" id="14670" internal_name="tado-interface" external_name="Tado Interface" version="1.1.0">
             <inputs>
 				<input type="number" const_name="trigger">Trigger</input>
 				<input type="string" const_name="email">E-Mail</input>
